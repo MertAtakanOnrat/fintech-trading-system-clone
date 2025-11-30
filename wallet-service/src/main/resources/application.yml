@@ -1,0 +1,23 @@
+server:
+  port: 8081 # Wallet Service 8081 portunda çalışacak (8080'i Gateway'e saklarız)
+
+spring:
+  application:
+    name: wallet-service
+
+  # Veritabanı Ayarları
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fintech_wallet
+    username: fintechuser
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  # JPA / Hibernate Ayarları
+  jpa:
+    database: POSTGRESQL
+    show-sql: true # Mülakat projesi olduğu için atılan sorguları konsolda görelim
+    hibernate:
+      ddl-auto: update # Tabloları Entity classlarına bakarak otomatik oluştur
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
