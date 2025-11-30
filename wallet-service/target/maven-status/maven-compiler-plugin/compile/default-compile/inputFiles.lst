@@ -1,1 +1,9 @@
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/dto/BalanceOperationRequest.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/service/WalletService.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/service/impl/WalletServiceImpl.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/model/Wallet.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/repository/WalletRepository.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/controller/WalletController.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/dto/BalanceResponse.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/WalletServiceApplication.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/wallet-service/src/main/java/com/fintech/wallet/dto/WalletCreateRequest.java

@@ -1,0 +1,32 @@
+server:
+  port: 8082 # DİKKAT: Port 8082
+
+spring:
+  application:
+    name: order-service
+
+  # Database Ayarları (fintech_order veritabanı)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fintech_order
+    username: fintechuser
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Kafka Ayarları (Şimdilik basit bağlantı)
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
