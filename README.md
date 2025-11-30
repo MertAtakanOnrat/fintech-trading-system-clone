@@ -200,9 +200,9 @@ Follow these steps to run the project locally.
 
 ```bash
 
-git clone https://github.com/username/equinox-exchange.git
+git clone https://github.com/MertAtakanOnrat/fintech-trading-system-clone.git
 
-cd equinox-exchange
+cd fintech-trading-system-clone.git
 
 ```
 
