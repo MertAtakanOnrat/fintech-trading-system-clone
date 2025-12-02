@@ -1,10 +1,12 @@
+com/fintech/wallet/consumer/WalletConsumer.class
+com/fintech/wallet/dto/BalanceOperationRequest.class
+com/fintech/wallet/WalletServiceApplication.class
+com/fintech/wallet/dto/BalanceResponse.class
+com/fintech/wallet/producer/WalletProducer.class
 com/fintech/wallet/repository/WalletRepository.class
 com/fintech/wallet/controller/WalletController.class
 com/fintech/wallet/service/WalletService.class
 com/fintech/wallet/model/Wallet$WalletBuilder.class
 com/fintech/wallet/service/impl/WalletServiceImpl.class
-com/fintech/wallet/dto/BalanceOperationRequest.class
 com/fintech/wallet/dto/WalletCreateRequest.class
 com/fintech/wallet/model/Wallet.class
-com/fintech/wallet/WalletServiceApplication.class
-com/fintech/wallet/dto/BalanceResponse.class
