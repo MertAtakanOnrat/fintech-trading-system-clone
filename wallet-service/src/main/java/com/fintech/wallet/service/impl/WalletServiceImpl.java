@@ -1,5 +1,6 @@
 package com.fintech.wallet.service.impl;
 
+import com.fintech.common.exception.InsufficientBalanceException;
 import com.fintech.wallet.dto.BalanceResponse;
 import com.fintech.wallet.dto.WalletCreateRequest;
 import com.fintech.wallet.model.Wallet;
@@ -55,15 +56,14 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public BalanceResponse withdraw(Long userId, String currency, BigDecimal amount) {
+    public BalanceResponse withdraw(Long userId, String currency, BigDecimal amount) throws InsufficientBalanceException {
         Wallet wallet = getWalletOrThrow(userId, currency);
 
-        // Yetersiz bakiye kontrolü
         if (wallet.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("Insufficient balance");
+            // BURASI DEĞİŞTİ: Artık rollback'i tetiklemeyen bir hata fırlatıyoruz
+            throw new InsufficientBalanceException("Insufficient balance");
         }
 
-        // Para çekme
         wallet.setBalance(wallet.getBalance().subtract(amount));
 
         Wallet savedWallet = walletRepository.save(wallet);

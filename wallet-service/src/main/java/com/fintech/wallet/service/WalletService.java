@@ -1,5 +1,6 @@
 package com.fintech.wallet.service;
 
+import com.fintech.common.exception.InsufficientBalanceException;
 import com.fintech.wallet.dto.BalanceResponse;
 import com.fintech.wallet.dto.WalletCreateRequest;
 
@@ -16,7 +17,7 @@ public interface WalletService {
     BalanceResponse deposit(Long userId, String currency, BigDecimal amount);
 
     // Para çek
-    BalanceResponse withdraw(Long userId, String currency, BigDecimal amount);
+    BalanceResponse withdraw(Long userId, String currency, BigDecimal amount) throws InsufficientBalanceException;
 
 
 }

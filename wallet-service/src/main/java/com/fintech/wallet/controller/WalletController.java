@@ -1,5 +1,6 @@
 package com.fintech.wallet.controller;
 
+import com.fintech.common.exception.InsufficientBalanceException;
 import com.fintech.wallet.dto.BalanceOperationRequest;
 import com.fintech.wallet.dto.BalanceResponse;
 import com.fintech.wallet.dto.WalletCreateRequest;
@@ -29,7 +30,7 @@ public class WalletController {
 
     // Para çek
     @PostMapping("/withdraw")
-    private BalanceResponse withdraw(@RequestBody BalanceOperationRequest request){
+    private BalanceResponse withdraw(@RequestBody BalanceOperationRequest request) throws InsufficientBalanceException {
         return walletService.withdraw(request.userId(), request.currency(), request.amount());
     }
 

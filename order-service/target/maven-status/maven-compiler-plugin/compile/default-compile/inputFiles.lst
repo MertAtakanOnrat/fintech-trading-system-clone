@@ -1,11 +1,13 @@
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/model/Order.java
-/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/config/KafkaConfig.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/OrderServiceApplication.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/producer/OrderProducer.java
-/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/repository/OrderRepository.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/domain/enums/OrderSide.java
-/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/controller/OrderController.java
-/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/service/OrderService.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/dto/CreateOrderRequest.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/consumer/OrderResultConsumer.java
 /Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/domain/enums/OrderStatus.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/config/KafkaConfig.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/repository/OrderRepository.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/model/OrderOutbox.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/repository/OrderOutboxRepository.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/controller/OrderController.java
+/Users/atakanonrat/Desktop/coding/java/fintech-trading-system-clone/order-service/src/main/java/com/fintech/order/service/OrderService.java

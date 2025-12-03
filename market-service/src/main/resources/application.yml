@@ -1,0 +1,11 @@
+server:
+  port: 8083 # Port 8083
+
+spring:
+  application:
+    name: market-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379

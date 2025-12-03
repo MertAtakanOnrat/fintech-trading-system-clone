@@ -23,7 +23,7 @@
         <module>common</module>
         <module>wallet-service</module>
         <module>order-service</module>
-<!--        <module>market-service</module>-->
+        <module>market-service</module>
     </modules>
 
     <properties>

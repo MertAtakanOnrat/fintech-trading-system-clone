@@ -7,18 +7,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="order-service" />
         <module name="common" />
         <module name="wallet-service" />
-        <module name="order-service" />
+        <module name="market-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="market-service" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
+      <module name="market-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="wallet-service" options="-parameters" />
     </option>
