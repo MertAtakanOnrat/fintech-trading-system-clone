@@ -3,10 +3,14 @@ package com.fintech.wallet.controller;
 import com.fintech.common.exception.InsufficientBalanceException;
 import com.fintech.wallet.dto.BalanceOperationRequest;
 import com.fintech.wallet.dto.BalanceResponse;
+import com.fintech.wallet.dto.PortfolioResponse;
 import com.fintech.wallet.dto.WalletCreateRequest;
+import com.fintech.wallet.model.Asset;
 import com.fintech.wallet.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/wallets")
@@ -38,6 +42,17 @@ public class WalletController {
     @GetMapping("/{userId}/{currency}")
     private BalanceResponse getBalance(@PathVariable Long userId, @PathVariable String currency){
         return walletService.getBalance(userId, currency);
+    }
+
+    @GetMapping("/{userId}/assets")
+    public List<Asset> getAssets(@PathVariable Long userId) {
+        // Not: Gerçek projede bunu DTO'ya çevirip dönmeliyiz ama test için entity dönüyoruz.
+        return walletService.getUserAssets(userId); // Interface'e eklemeyi unutma!
+    }
+
+    @GetMapping("/{userId}/portfolio")
+    public PortfolioResponse getPortfolio(@PathVariable Long userId) {
+        return walletService.getUserPortfolio(userId);
     }
 
 }

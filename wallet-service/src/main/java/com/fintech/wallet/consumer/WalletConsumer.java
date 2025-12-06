@@ -1,6 +1,6 @@
 package com.fintech.wallet.consumer;
 
-import com.fintech.common.event.OrderCreatedEvent;
+import com.fintech.common.event.TradeExecutedEvent;
 import com.fintech.common.exception.InsufficientBalanceException;
 import com.fintech.wallet.producer.WalletProducer;
 import com.fintech.wallet.service.WalletService;
@@ -10,8 +10,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -20,28 +18,56 @@ public class WalletConsumer {
     private final WalletService walletService;
     private final WalletProducer walletProducer;
 
-    @KafkaListener(topics = "order-created-topic", groupId = "wallet-service-group")
+    @KafkaListener(topics = "trade-executed-topic", groupId = "wallet-service-group")
     @Transactional
-    public void consume(OrderCreatedEvent event) {
-        log.info("Wallet Service received Order Event: {}", event);
+    public void consumeTrade(TradeExecutedEvent event) {
+        log.info("Trade Event Received: {} shares of {} @ {}", event.amount(), event.symbol(), event.price());
 
         try {
-            BigDecimal totalAmount = event.price().multiply(event.amount());
+            // 1. ALICI TARAFI (Buyer): Para Ver -> Hisse Al
+            // event.buyerId() metodunu kullanıyoruz (userId yok artık)
+            log.info("Processing BUYER side (User: {})", event.buyerId());
 
-            walletService.withdraw(event.userId(), "TRY", totalAmount);
+            walletService.executeBuyOrder(
+                    event.buyerId(),
+                    event.symbol(),
+                    event.amount(),
+                    event.price()
+            );
 
-            walletProducer.sendResult(event.orderId(), "SUCCESS");
+            // Alıcı siparişine (buyOrderId) SUCCESS dön
+            walletProducer.sendResult(event.buyOrderId(), "SUCCESS");
+
+
+            // 2. SATICI TARAFI (Seller): Hisse Ver -> Para Al
+            // event.sellerId() metodunu kullanıyoruz
+            log.info("Processing SELLER side (User: {})", event.sellerId());
+
+            walletService.executeSellOrder(
+                    event.sellerId(),
+                    event.symbol(),
+                    event.amount(),
+                    event.price()
+            );
+
+            // Satıcı siparişine (sellOrderId) SUCCESS dön
+            walletProducer.sendResult(event.sellOrderId(), "SUCCESS");
+
+            log.info("Trade Settlement Completed Successfully ✅");
 
         } catch (InsufficientBalanceException e) {
-            // İŞTE ÇÖZÜM: Bu bir Checked Exception olduğu için Transaction Rollback OLMAZ.
-            // Yani "FAILED" mesajını attığımızda DB'ye de başarıyla commit edilecek.
-            log.error("Business logic error (Insufficient Balance) for order {}: {}", event.orderId(), e.getMessage());
-            walletProducer.sendResult(event.orderId(), "FAILED");
+            // Burada kritik bir durum var: Matching Engine eşleştirdi ama cüzdanda para/hisse yok.
+            // Bu "Settlement Failure" (Takas Hatası) durumudur.
+            log.error("Settlement Business Error: {}", e.getMessage());
+
+            // Hata alan tarafa FAILED dönmek lazım.
+            // Basitlik adına şimdilik her iki siparişe de FAILED dönüyoruz (veya loglayıp geçiyoruz).
+            // Gerçek sistemde burada "Compensation" (Telafi) işlemi yapılır.
+            walletProducer.sendResult(event.buyOrderId(), "FAILED");
+            walletProducer.sendResult(event.sellOrderId(), "FAILED");
 
         } catch (Exception e) {
-            // Diğer beklenmedik hatalar (DB çöktü vs.) hala rollback yapar ve retry olur.
-            log.error("System error processing order {}: {}", event.orderId(), e.getMessage());
-            // Burada FAILED atmıyoruz, çünkü sistem hatası var, Kafka tekrar denesin istiyoruz.
+            log.error("System error during settlement: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

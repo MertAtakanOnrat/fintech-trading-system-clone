@@ -24,6 +24,7 @@
         <module>wallet-service</module>
         <module>order-service</module>
         <module>market-service</module>
+        <module>matching-engine</module>
     </modules>
 
     <properties>

@@ -18,7 +18,7 @@
       <value-separator value="" />
       <begin-quote value="&quot;" />
       <end-quote value="&quot;" />
-      <file-name value="ORDER_OUTBOX.xls" />
+      <file-name value="ASSETS.xls" />
       <file-location value="$PROJECT_DIR$/../../.." />
       <scope value="GLOBAL" />
       <destination value="FILE" />
@@ -73,9 +73,14 @@ COMMIT;]]></console>
     <connection id="01ae5d9a-41d8-485b-a67a-a0b033008a15">
       <console name="WALLET" type="STANDARD" schema="fintech_wallet" session="Main"><![CDATA[SELECT * FROM "public".wallets
 SELECT * FROM "public".wallet_outbox
+SELECT * FROM "public".assets
+
+
+INSERT INTO public.assets (user_id, symbol, available_amount, locked_amount) VALUES (100, 'ASELS', 50, 0);
 
 TRUNCATE TABLE public.wallets RESTART IDENTITY CASCADE;
 TRUNCATE TABLE public.wallet_outbox RESTART IDENTITY CASCADE;
+TRUNCATE TABLE public.assets RESTART IDENTITY CASCADE;
 COMMIT;]]></console>
     </connection>
   </component>

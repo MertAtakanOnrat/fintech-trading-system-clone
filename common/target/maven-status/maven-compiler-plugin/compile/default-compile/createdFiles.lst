@@ -1,3 +1,4 @@
-com/fintech/common/event/WalletEvent.class
 com/fintech/common/exception/InsufficientBalanceException.class
 com/fintech/common/event/OrderCreatedEvent.class
+com/fintech/common/event/TradeExecutedEvent.class
+com/fintech/common/event/WalletEvent.class

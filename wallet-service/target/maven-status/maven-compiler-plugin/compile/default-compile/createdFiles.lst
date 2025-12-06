@@ -1,7 +1,12 @@
 com/fintech/wallet/consumer/WalletConsumer.class
+com/fintech/wallet/dto/AssetResponse.class
+com/fintech/wallet/model/Asset$AssetBuilder.class
+com/fintech/wallet/repository/AssetRepository.class
+com/fintech/wallet/service/WalletMarketService.class
 com/fintech/wallet/dto/BalanceOperationRequest.class
 com/fintech/wallet/WalletServiceApplication.class
 com/fintech/wallet/model/WalletOutbox.class
+com/fintech/wallet/model/Asset.class
 com/fintech/wallet/dto/BalanceResponse.class
 com/fintech/wallet/repository/WalletOutboxRepository.class
 com/fintech/wallet/producer/WalletProducer.class
@@ -13,4 +18,5 @@ com/fintech/wallet/service/impl/WalletServiceImpl.class
 com/fintech/wallet/dto/WalletCreateRequest.class
 com/fintech/wallet/model/Wallet.class
 com/fintech/wallet/exception/GlobalExceptionHandler.class
+com/fintech/wallet/dto/PortfolioResponse.class
 com/fintech/wallet/model/WalletOutbox$WalletOutboxBuilder.class

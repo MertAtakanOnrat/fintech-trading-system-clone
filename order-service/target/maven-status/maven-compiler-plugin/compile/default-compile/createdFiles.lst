@@ -6,6 +6,7 @@ com/fintech/order/model/Order.class
 com/fintech/order/consumer/OrderResultConsumer.class
 com/fintech/order/domain/enums/OrderStatus.class
 com/fintech/order/model/OrderOutbox.class
+com/fintech/order/service/MarketPriceService.class
 com/fintech/order/model/OrderOutbox$OrderOutboxBuilder.class
 com/fintech/order/config/KafkaConfig.class
 com/fintech/order/dto/CreateOrderRequest.class
