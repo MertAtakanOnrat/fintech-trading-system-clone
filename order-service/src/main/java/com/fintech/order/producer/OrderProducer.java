@@ -1,46 +1,45 @@
 package com.fintech.order.producer;
 
+import com.fasterxml.jackson.databind.ObjectMapper; // JSON kütüphanesi
 import com.fintech.common.event.OrderCreatedEvent;
 import com.fintech.order.model.OrderOutbox;
 import com.fintech.order.repository.OrderOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class OrderProducer {
 
-    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
     private final OrderOutboxRepository outboxRepository;
+    private final ObjectMapper objectMapper; // Spring Boot otomatik inject eder
 
-    // MANDATORY: Bu metodun çalışması için bir Transaction başlamış OLMALI.
-    // (OrderService.createOrder metodu @Transactional olduğu için oradan transaction gelecek)
+    // KafkaTemplate ARTIK YOK! Sadece DB'ye yazıyoruz. Hız budur.
     @Transactional(propagation = Propagation.MANDATORY)
     public void sendMessage(OrderCreatedEvent event) {
-        log.info("Saving Outbox & Sending Order Event: {}", event.orderId());
+        log.info("Saving Order to Outbox (Async Prep): {}", event.orderId());
 
-        // 1. DB Loglama (Outbox)
-        OrderOutbox outbox = OrderOutbox.builder()
-                .orderId(event.orderId())
-                .eventType("ORDER_CREATED")
-                .payload(event.toString())
-                .build();
-        outboxRepository.save(outbox);
-
-        // 2. Kafka'ya At ve CEVABI BEKLE (.get())
-        // Eğer Kafka kapalıysa burada hata fırlatılır -> Transaction Rollback olur -> Sipariş DB'den silinir.
         try {
-            kafkaTemplate.send("order-created-topic", event).get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Kafka send failed! Rolling back Order transaction. Error: {}", e.getMessage());
-            throw new RuntimeException("Kafka unreachable", e);
+            // Gerçek JSON dönüşümü
+            String payloadJson = objectMapper.writeValueAsString(event);
+
+            OrderOutbox outbox = OrderOutbox.builder()
+                    .orderId(event.orderId())
+                    .eventType("ORDER_CREATED")
+                    .payload(payloadJson)
+                    .processed(false) // Gönderilmedi olarak işaretle
+                    .build();
+
+            outboxRepository.save(outbox);
+
+        } catch (Exception e) {
+            // JSON hatası olursa işlemi iptal et
+            log.error("Error serializing event", e);
+            throw new RuntimeException(e);
         }
     }
 }
