@@ -1,0 +1,35 @@
+# --- Maven ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/resources/**/target/
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# --- Eclipse ---
+.classpath
+.project
+.settings/
+bin/
+
+# --- Java ---
+*.class
+*.log
+*.ctxt
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Docker & Logs ---
+logs/
+*.log
