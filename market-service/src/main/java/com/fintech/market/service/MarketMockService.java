@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate; // EKLENECEK
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,17 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import jakarta.annotation.PostConstruct; // javax.annotation yerine jakarta (SpringBoot 3+)
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor // Lombok constructor'ı otomatik oluşturur (redisTemplate için)
@@ -31,6 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MarketMockService {
 
     private final StringRedisTemplate redisTemplate;
+    private final SimpMessagingTemplate messagingTemplate; // EKLENDİ (Yayın Aracı)
 
     // Hisse senetleri ve hafızadaki son fiyatları
     private final Map<String, BigDecimal> stocks = new ConcurrentHashMap<>();
@@ -60,6 +52,12 @@ public class MarketMockService {
             // 2. REDIS'E YAZ (Order Service buradan okuyacak)
             // Key: "PRICE:THYAO" -> Value: "252.30"
             redisTemplate.opsForValue().set("PRICE:" + symbol, newPrice.toString());
+
+            // 3. WEBSOCKET İLE YAYINLA (YENİ) 📡
+            // Kanal: /topic/prices
+            // Mesaj: {"symbol": "THYAO", "price": 250.50} (Basit JSON String)
+            String jsonUpdate = String.format("{\"symbol\":\"%s\", \"price\":%s}", symbol, newPrice);
+            messagingTemplate.convertAndSend("/topic/prices", jsonUpdate);
 
             log.info("Updated Price: {} -> {}", symbol, newPrice);
         });

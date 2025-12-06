@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Midas Clone - Live Ticker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #1a1a1a; color: #00ff00; padding: 20px; }
+        .stock-card { border: 1px solid #333; padding: 15px; margin: 10px; display: inline-block; width: 200px; text-align: center; background: #222; }
+        .symbol { font-size: 24px; font-weight: bold; color: #fff; }
+        .price { font-size: 32px; margin-top: 10px; }
+        .up { color: #00ff00; }
+        .down { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Live Market Data</h1>
+    <div id="stocks-container"></div>
+
+    <script>
+        var socket = new SockJS('http://localhost:8083/ws-market');
+        var stompClient = Stomp.over(socket);
+        var stockData = {}; // Son fiyatları tutmak için
+
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            
+            // Kanala Abone Ol
+            stompClient.subscribe('/topic/prices', function (message) {
+                var data = JSON.parse(message.body);
+                updateStockUI(data);
+            });
+        });
+
+        function updateStockUI(data) {
+            var divId = "stock-" + data.symbol;
+            var element = document.getElementById(divId);
+            
+            // Fiyat arttı mı azaldı mı?
+            var oldPrice = stockData[data.symbol] || data.price;
+            var colorClass = data.price >= oldPrice ? "up" : "down";
+            stockData[data.symbol] = data.price;
+
+            if (!element) {
+                // Yeni hisse kartı oluştur
+                var container = document.getElementById("stocks-container");
+                var newDiv = document.createElement("div");
+                newDiv.id = divId;
+                newDiv.className = "stock-card";
+                newDiv.innerHTML = `
+                    <div class="symbol">${data.symbol}</div>
+                    <div class="price ${colorClass}" id="price-${data.symbol}">${data.price}</div>
+                `;
+                container.appendChild(newDiv);
+            } else {
+                // Mevcut kartı güncelle
+                var priceEl = document.getElementById("price-" + data.symbol);
+                priceEl.innerText = data.price;
+                priceEl.className = "price " + colorClass;
+            }
+        }
+    </script>
+</body>
+</html>
