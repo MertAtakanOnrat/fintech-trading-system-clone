@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.fintech.common.grpc";
+option java_outer_classname = "WalletProto";
+
+service WalletService {
+  rpc CheckBalance (BalanceCheckRequest) returns (BalanceCheckResponse);
+}
+
+message BalanceCheckRequest {
+  int64 user_id = 1;
+  string currency = 2;
+  double amount = 3;
+}
+
+message BalanceCheckResponse {
+  bool has_sufficient_funds = 1;
+  string message = 2;
+}

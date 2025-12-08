@@ -20,23 +20,37 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderProducer orderProducer;
-    // private final StringRedisTemplate redisTemplate; <-- BUNU SİLDİK
-    private final MarketPriceService marketPriceService; // <-- BUNU EKLEDİK
+    private final MarketPriceService marketPriceService;
+    private final WalletGrpcClient walletGrpcClient;
 
     @Transactional
     public Long createOrder(CreateOrderRequest request) {
-        // Fiyat Belirleme Mantığı
+        // 1. ÖNCE FİYATI BELİRLE (Sıralamayı düzelttik)
         BigDecimal finalPrice = request.price();
 
         if (finalPrice == null) {
-            // Detayları (Redis key, parsing vs.) bilmiyoruz, sadece fiyatı istiyoruz.
+            // Market Emir: Fiyatı Redis'ten çek
             finalPrice = marketPriceService.fetchCurrentPrice(request.symbol());
             log.info("Market Order detected. Used current price for {}: {}", request.symbol(), finalPrice);
         } else {
+            // Limit Emir: Kullanıcının istediği fiyat
             log.info("Limit Order detected. User requested price: {}", finalPrice);
         }
 
-        // 1. Emri Veritabanına Kaydet
+        // 2. ŞİMDİ BAKİYE KONTROLÜ YAP (gRPC)
+        // Artık finalPrice elimizde olduğu için hata vermez.
+        if ("BUY".equals(request.side().name())) {
+            double totalAmount = finalPrice.multiply(request.amount()).doubleValue();
+
+            boolean hasFunds = walletGrpcClient.hasSufficientFunds(request.userId(), totalAmount);
+
+            if (!hasFunds) {
+                log.warn("Pre-check failed: Insufficient funds via gRPC for User {}", request.userId());
+                throw new RuntimeException("Insufficient funds (gRPC check failed)");
+            }
+        }
+
+        // 3. Emri Veritabanına Kaydet
         Order order = Order.builder()
                 .userId(request.userId())
                 .symbol(request.symbol())
@@ -48,7 +62,7 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // 2. Event Oluştur
+        // 4. Event Oluştur
         OrderCreatedEvent event = new OrderCreatedEvent(
                 savedOrder.getId().toString(),
                 savedOrder.getUserId(),
@@ -58,7 +72,7 @@ public class OrderService {
                 savedOrder.getSide().toString()
         );
 
-        // 3. Kafka'ya Fırlat
+        // 5. Kafka'ya Fırlat (Outbox)
         orderProducer.sendMessage(event);
 
         return savedOrder.getId();
