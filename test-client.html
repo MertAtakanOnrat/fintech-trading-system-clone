@@ -1,64 +1,80 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>Midas Clone - Live Ticker</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <style>
-        body { font-family: 'Courier New', monospace; background: #1a1a1a; color: #00ff00; padding: 20px; }
-        .stock-card { border: 1px solid #333; padding: 15px; margin: 10px; display: inline-block; width: 200px; text-align: center; background: #222; }
-        .symbol { font-size: 24px; font-weight: bold; color: #fff; }
-        .price { font-size: 32px; margin-top: 10px; }
-        .up { color: #00ff00; }
-        .down { color: #ff0000; }
-    </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
 </head>
 <body>
-    <h1>🚀 Live Market Data</h1>
-    <div id="stocks-container"></div>
-
-    <script>
-        var socket = new SockJS('http://localhost:8083/ws-market');
-        var stompClient = Stomp.over(socket);
-        var stockData = {}; // Son fiyatları tutmak için
-
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            
-            // Kanala Abone Ol
-            stompClient.subscribe('/topic/prices', function (message) {
-                var data = JSON.parse(message.body);
-                updateStockUI(data);
-            });
-        });
-
-        function updateStockUI(data) {
-            var divId = "stock-" + data.symbol;
-            var element = document.getElementById(divId);
-            
-            // Fiyat arttı mı azaldı mı?
-            var oldPrice = stockData[data.symbol] || data.price;
-            var colorClass = data.price >= oldPrice ? "up" : "down";
-            stockData[data.symbol] = data.price;
-
-            if (!element) {
-                // Yeni hisse kartı oluştur
-                var container = document.getElementById("stocks-container");
-                var newDiv = document.createElement("div");
-                newDiv.id = divId;
-                newDiv.className = "stock-card";
-                newDiv.innerHTML = `
-                    <div class="symbol">${data.symbol}</div>
-                    <div class="price ${colorClass}" id="price-${data.symbol}">${data.price}</div>
-                `;
-                container.appendChild(newDiv);
-            } else {
-                // Mevcut kartı güncelle
-                var priceEl = document.getElementById("price-" + data.symbol);
-                priceEl.innerText = data.price;
-                priceEl.className = "price " + colorClass;
-            }
-        }
-    </script>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Midas Clone - Live Ticker&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Courier New', monospace; background: #1a1a1a; color: #00ff00; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.stock-card { border: 1px solid #333; padding: 15px; margin: 10px; display: inline-block; width: 200px; text-align: center; background: #222; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.symbol { font-size: 24px; font-weight: bold; color: #fff; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.price { font-size: 32px; margin-top: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.up { color: #00ff00; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.down { color: #ff0000; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;🚀 Live Market Data&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="stocks-container"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var socket = new SockJS('http://localhost:8083/ws-market');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var stompClient = Stomp.over(socket);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var stockData = {}; // Son fiyatları tutmak için</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>stompClient.connect({}, function (frame) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>console.log('Connected: ' + frame);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Kanala Abone Ol</p>
+<p class="p1"><span class="Apple-converted-space">            </span>stompClient.subscribe('/topic/prices', function (message) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>var data = JSON.parse(message.body);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>updateStockUI(data);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function updateStockUI(data) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>var divId = "stock-" + data.symbol;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>var element = document.getElementById(divId);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Fiyat arttı mı azaldı mı?</p>
+<p class="p1"><span class="Apple-converted-space">            </span>var oldPrice = stockData[data.symbol] || data.price;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>var colorClass = data.price &gt;= oldPrice ? "up" : "down";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>stockData[data.symbol] = data.price;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!element) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Yeni hisse kartı oluştur</p>
+<p class="p1"><span class="Apple-converted-space">                </span>var container = document.getElementById("stocks-container");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>var newDiv = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>newDiv.id = divId;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>newDiv.className = "stock-card";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>newDiv.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="symbol"&gt;${data.symbol}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="price ${colorClass}" id="price-${data.symbol}"&gt;${data.price}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>container.appendChild(newDiv);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Mevcut kartı güncelle</p>
+<p class="p1"><span class="Apple-converted-space">                </span>var priceEl = document.getElementById("price-" + data.symbol);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>priceEl.innerText = data.price;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>priceEl.className = "price " + colorClass;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
 </body>
 </html>
